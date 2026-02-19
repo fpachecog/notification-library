@@ -1,0 +1,128 @@
+{
+  "info": {
+    "_postman_id": "a7607e8b-9202-4824-8cb5-a733e36929bb",
+    "name": "Notifications",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52541074",
+    "_collection_link": "https://go.postman.co/collection/52541074-a7607e8b-9202-4824-8cb5-a733e36929bb?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "send-email",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"to\": \"user@example.com\",\r\n    \"subject\": \"Welcome\",\r\n    \"textBody\": \"Hello User\",\r\n    \"htmlBody\": \"<b>Hello User</b>\",\r\n    \"attachments\": [],\r\n    \"metadata\": {\r\n        \"name\": \"User\"\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/notifications/email",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "notifications",
+            "email"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-sms",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"toE164\": \"+56911111111\",\r\n    \"body\": \"Code: 123456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/notifications/sms",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "notifications",
+            "sms"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-push",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"deviceToken\": \"fcm_device_token_123\",\r\n    \"title\": \"Hi!\",\r\n    \"body\": \"You have a message\",\r\n    \"data\": {\r\n        \"screen\": \"inbox\"\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/notifications/push",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "notifications",
+            "push"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-slack",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"channelId\": \"C024BE7LH\",\r\n    \"text\": \"Build succeeded :tada:\",\r\n    \"blocks\": []\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/notifications/slack",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "notifications",
+            "slack"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

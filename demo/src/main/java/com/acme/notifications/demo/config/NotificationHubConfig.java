@@ -27,7 +27,7 @@ public class NotificationHubConfig {
                 .defaultFromEmail("noreply@acme.com")
                 .defaultFromSms("+12345678900")
                 // Proveedores simulados
-                .registerEmail("sendgrid", new SendGridEmailClient("SG.xxxxxx"))
+//                .registerEmail("sendgrid", new SendGridEmailClient("SG.xxxxxx"))
                 .registerEmail("mailgun", new MailgunEmailClient("key-xxxx", "mg.acme.com"))
                 .registerSms("twilio", new TwilioSmsClient("ACxxxx", "authxxxx"))
                 .registerPush("fcm", new FcmPushClient("/path/service-account.json"))

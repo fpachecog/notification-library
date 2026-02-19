@@ -341,5 +341,86 @@ A diferencia de un framework como Spring Security, esta librería no incluye com
 * Prevenir malas prácticas comunes en integraciones externas.
 
 ### Demo
-Se trata del proyecto "demo" presente en el repositorio. Es un proyecto en spring boot 3.5 y java 21, que exponer 4 endpoints
+Se trata del proyecto "demo" presente en el repositorio. Es un proyecto en spring boot 3.5 y java 21, que exponer 4 endpoints.
+El proyecto demo, no contiene las mejores prácticas, sólo de un demo que expone los endpoints, configura la librería y la utiliza.
+Los ejemplos de ejecución de los endpoints se encuentra en [Postman Collection](./Notifications.postman_collection.json)
 
+El demo realiza la configuracion en la clase ***NotificationHubConfig*** quien internamente utiliza la clase ***NotificationConfigBuilder*** (perteneciente a la librería)
+
+Ejemplo:
+
+```java
+@Configuration
+public class NotificationHubConfig {
+
+    @Bean
+    public NotificationConfig notificationConfig() {
+        return new NotificationConfigBuilder()
+                .defaultFromEmail("noreply@acme.com")
+                .defaultFromSms("+12345678900")
+                // Proveedores simulados
+                //  .registerEmail("sendgrid", new SendGridEmailClient("SG.xxxxxx")) 
+                // En este caso, utiliza el proveedor MailgunEmailClient para envar emails
+                .registerEmail("mailgun", new MailgunEmailClient("key-xxxx", "mg.acme.com"))
+                .registerSms("twilio", new TwilioSmsClient("ACxxxx", "authxxxx"))
+                .registerPush("fcm", new FcmPushClient("/path/service-account.json"))
+                .registerSlack("slack", new SlackApiClient("xoxb-***"))
+                // Prioridades y fallback por canal
+                .selection(new PrimaryFallbackProviderSelection(Map.of(
+                        ChannelType.EMAIL, List.of("sendgrid", "mailgun"),
+                        ChannelType.SMS,   List.of("twilio"),
+                        ChannelType.PUSH,  List.of("fcm"),
+                        ChannelType.SLACK, List.of("slack")
+                )))
+                // Reintentos + backoff
+                .retry(NotificationConfigBuilder.fixedRetry(3, 200))
+                // Asíncrono opcional
+                .async(NotificationConfigBuilder.async(Executors.newFixedThreadPool(4)))
+                .build();
+    }
+```
+
+Luego en la clase ***EmailController*** 
+
+```java
+package com.acme.notifications.demo.controller;
+
+import com.acme.notifications.demo.dto.*;
+import com.acme.notifications.hub.dispatcher.core.facade.NotificationFacade;
+import com.acme.notifications.hub.dispatcher.core.model.api.*;
+import com.acme.notifications.hub.dispatcher.core.model.impl.*;
+import com.acme.notifications.hub.dispatcher.core.model.impl.content.*;
+import com.acme.notifications.hub.dispatcher.core.service.SendResult;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/notifications/email")
+public class EmailController {
+
+    private final NotificationFacade facade;
+
+    public EmailController(NotificationFacade facade) { this.facade = facade; }
+
+    @PostMapping
+    public ResponseEntity<SendResponse> send(@Valid @RequestBody SendEmailRequest req) {
+        var notification = new DefaultEmailNotification(
+                new DefaultRecipient(req.to(), null),
+                new DefaultEmailContent(
+                        req.subject(),
+                        req.textBody(),
+                        req.htmlBody(),
+                        List.of()
+                ),
+                Priority.NORMAL,
+                req.metadata()
+        );
+        SendResult r = facade.send(notification);
+        return ResponseEntity.ok(new SendResponse(r.success(), r.provider(), r.providerMessageId(), r.errorCode(), r.errorMessage()));
+    }
+}
+```
+Se inyecta ***NotificationFacade*** (Clase propia de la librería) y luego se utiliza el método ***send*** 
