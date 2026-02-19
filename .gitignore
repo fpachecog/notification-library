@@ -1,0 +1,76 @@
+# IDEs y Editores
+## Visual Studio Code
+.vscode/
+*.code-workspace
+
+## IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+## Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+## NetBeans
+nbproject/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+## Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+## Vim
+*.swp
+*.swo
+*~
+
+## Emacs
+*~
+\#*\#
+.\#*
+
+# Sistema Operativo
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Linux
+.directory
+
+# Dependencias y Build
+node_modules/
+bower_components/
+vendor/
+dist/
+build/
+target/
+*.log
+*.tmp
+
+# Archivos de configuración local
+.env
+.env.local
+*.local
+
+# Archivos compilados
+*.class
+*.pyc
+*.pyo
+__pycache__/
+*.so
+*.dll
+*.exe
